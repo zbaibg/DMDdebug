@@ -43,7 +43,7 @@ public:
 
 	parameters(){}
 
-	void read_param();
+	void read_param(int argc, char** argv);
 	void read_jdftx();
 	void get_valley_transitions(string file_forbid_vtrans);
 

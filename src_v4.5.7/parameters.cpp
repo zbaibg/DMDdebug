@@ -45,10 +45,31 @@ void parameters::get_valley_transitions(string file_forbid_vtrans){
 	}
 }
 
-void parameters::read_param(){
+void parameters::read_param(int argc, char** argv){
 	fstream fin;
-	fin.open("param.in", ios::in);
-	if (fin.fail()) error_message("input file param.in does not exist");
+	string inFile = "";
+	if (argc == 1)
+	{
+		inFile = "param.in";
+        	if(ionode)
+		{ 
+			printf("Input file not specified at runtime.\n");
+        		printf("Attempting to read simulation parameters from default input file: %s\n", inFile.c_str());
+		}
+        	fin.open(inFile, ios::in);
+        	if (fin.fail()) error_message("ERROR: input file param.in does not exist");
+	}
+	else if ( argc == 2 )
+	{
+        	inFile = argv[1];
+        	if (ionode) printf("Attempting to read simulation parameters from specified input file: %s\n", inFile.c_str());
+        	fin.open(inFile, ios::in);
+        	if (fin.fail()) error_message("ERROR: input file does not exist");
+	}
+	else if (argc > 2)
+	{
+        	error_message("ERROR: too many arguments for input file name.\n");
+	}
 	std::map<std::string, std::string> param_map = map_input(fin);
 
 	if (ionode) printf("\n");
