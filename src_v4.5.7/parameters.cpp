@@ -333,12 +333,18 @@ void parameters::read_param(int argc, char** argv){
 	tend = get(param_map, "tend", 0., fs);
 	tstep = get(param_map, "tstep", 1., fs);
 	if (pmp.laserAlg == "lindblad" || pmp.laserAlg == "coherent"){
-		double tstep_pump = get(param_map, "tstep_pump", tstep / fs, fs);
+		double tstep_laser_default = 2*M_PI/(10*pumpE); // 1/10th  the time period of laser
+		double tstep_pump = get(param_map, "tstep_pump", tstep_laser_default / fs, fs);
 		tstep_laser = get(param_map, "tstep_laser", tstep_pump / fs, fs);
+		if (ionode) printf("time period of laser = %f\n",  2*M_PI/pumpE);
+		if(tstep_laser > 5*tstep_laser_default) 
+		{
+			error_message("ERROR: tstep_laser is too large", "read_param");
+		}
+		else if((tstep_laser > tstep_laser_default) && ionode) printf("\nWARNING: tstep_laser is large! Consider decreasing it.\n");
 	}
 	else
-		tstep_laser = tstep;
-
+		tstep_laser = tstep;	
 	if (ionode) printf("\nOther measurement parameters:\n");
 	print_tot_band = get(param_map, "print_tot_band", 0);
 	alg.set_scv_zero = get(param_map, "alg_set_scv_zero", 0);
