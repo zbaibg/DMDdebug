@@ -389,8 +389,7 @@ void parameters::read_param(int argc, char** argv){
 	ode.hstart = get(param_map, "ode_hstart", 1e-3, fs);
 	ode.hmin = get(param_map, "ode_hmin", 0, fs);
 	ode.hmax = get(param_map, "ode_hmax", std::max(tstep, tstep_laser) / fs, fs);
-	double dtmp = pmp.laserAlg == "coherent" ? 1 : tstep_laser / fs;
-	ode.hmax_laser = get(param_map, "ode_hmax_laser", dtmp, fs);
+	ode.hmax_laser = get(param_map, "ode_hmax_laser", tstep_laser/fs, fs);
 	ode.epsabs = get(param_map, "ode_epsabs", 1e-8);
 
 	/*
