@@ -52,7 +52,7 @@ public:
 
 		prefac_per_cell_size = prefac_per_cell / latt->cell_size; //density in a.u.
 		prefac_per_cell_size_cmd = prefac_per_cell / latt->cell_size_cmd; //density in cm^{-d}
-		prefac_cmby_per_cell_size_cmd = prefac_per_cell_size_cmd / cmbys; //current density in cm^{-d} * cm/s
+		prefac_cmby_per_cell_size_cmd = prefac_per_cell_size_cmd / cmbys / Coul; //current density in Coul * cm^{-d} * cm/s
 
 		if (nb > nv){
 			gauss_elec = new GaussianSmapling(elec->ecmin, param->de_measure, elec->emax, param->degauss_measure);
@@ -174,7 +174,7 @@ void ob_1dmk<Tl, Te>::measure_brange(string what, bool diff, bool print_ene, dou
 				filtot = fopen(fname.c_str(), "a");
 				if (in_obSet(obSet1s, what)) fprintf(filtot, "#time(au), s(t), s(t) without exp(iwt)\n");
 				else if (in_obSet(obSet1l, what)) fprintf(filtot, "#time(au), l(t), l(t) without exp(iwt)\n");
-				else if (in_obSet(obSet1j, what)) fprintf(filtot, "#time(au), j(t), j(t) without exp(iwt)\n");
+				else if (in_obSet(obSet1j, what)) fprintf(filtot, "#time(au), j(t) A/cm^2, j(t) without exp(iwt)\n");
 				else if (what == "s-t2-wu" || what == "s-t2star") fprintf(filtot, "#time(au), s-t2(t)\n");
 				else if (in_obSet(obSet4, what)) fprintf(filtot, "#time(au), sqrt(entropy)(t)\n");
 				else if (what == "s-t2-mani") fprintf(filtot, "#time(au), sqrt(spin part of entropy)(t)\n");
