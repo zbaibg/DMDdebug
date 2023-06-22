@@ -315,21 +315,51 @@ void singdenmat_k::read_dm_restart(){
 			oneminusdm[ik][i*nb + i] = c1 - dm[ik][i*nb + i];
 	}
 }
-void singdenmat_k::write_dm_tofile(double t){
+void singdenmat_k::write_dm_tofile(double t, double t0, double tend, double **e){
 	MPI_Barrier(MPI_COMM_WORLD);
 	if (!ionode) return;
-	//FILE *fil = fopen("denmat.out", "a"); // will be too large after long time
+	FILE *fil = fopen("denmat.out", "a"); // will be too large after long time
 	FILE *filbin = fopen("restart/denmat_restart.bin", "wb");
 	FILE *filtime = fopen("restart/time_restart.dat", "w"); fprintf(filtime, "%14.7le", t);
+	
 	//fprintf(fil, "Writing density matrix at time %10.3e:\n", t);
+	// Writing density matrix at k_[E = E_cmin] at time t.
+	// Printing absolute values to save space.  
+	fprintf(fil, "%21.3f   ", t/fs);
+	for (int b = 0; b < nb * nb; b++)
+		fprintf(fil, "%11.6f ", dm[0][b].abs());
+	fprintf(fil, "\n");
+    
+	if (fabs(t - dt) < 1e-30)
+	{
+		FILE *filoccupt0 = fopen("occupations-tstart.out", "w");
+		fprintf(filoccupt0, "# nk = %d nb = %d t = %11.6f tstep = %11.6f tend = %11.6f \n", nk_glob, nb, t, dt, tend);
+		for (int ik = 0; ik < nk_glob; ik++)
+		{
+			for (int b = 0; b < nb; b++)
+				fprintf(filoccupt0, "%11.6f   %11.6f\n", e[ik][b], dm[ik][b*(nb+1)].real());
+		}	
+		fclose(filoccupt0);
+	}
+	if (fabs(t - tend) < dt)
+	{
+		FILE *filoccuptend = fopen("occupations-tend.out", "w");
+		fprintf(filoccuptend, "# nk = %d nb = %d t = %11.6f tstep = %11.6f tend = %11.6f \n", nk_glob, nb, t, dt, tend);
+		for (int ik = 0; ik < nk_glob; ik++)
+		{
+			for (int b = 0; b < nb; b++)
+				fprintf(filoccuptend, "%11.6f   %11.6f\n", e[ik][b], dm[ik][b*(nb+1)].real());
+		}	
+		fclose(filoccuptend);
+	}
 	for (int ik = 0; ik < nk_glob; ik++)//{
 		//for (int i = 0; i < nb*nb; i++)
 			//fprintf(fil, "(%15.7e,%15.7e) ", dm[ik][i].real(), dm[ik][i].imag());
 		fwrite(dm[ik], 2 * sizeof(double), nb*nb, filbin);
 		//fprintf(fil, "\n");
 	//}
-	//fflush(fil);
-	//fclose(fil); 
+	fflush(fil);
+	fclose(fil); 
 	fclose(filbin); fclose(filtime);
 }
 void singdenmat_k::write_dm(){
