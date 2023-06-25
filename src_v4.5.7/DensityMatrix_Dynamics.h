@@ -8,6 +8,7 @@
 #include "ElecLight.h"
 #include "ElectronPhonon.h"
 #include "phenomenon_relax.h"
+#include "phenomenon_recomb.h"
 #include "DenMat.h"
 #include "observable.h"
 #include "material_model.h"
@@ -24,6 +25,7 @@ public:
 	Telight* elight;
 	Teph* eph;
 	phenom_relax* phnm_rlx;
+	phenom_recomb* phnm_recomb;
 	singdenmat_k* sdmk;
 	ob_1dmk<Tl, Te>* ob;
 	double *tau_neq;
@@ -65,6 +67,7 @@ public:
 
 		// phenomenon 
 		if (alg.phenom_relax) phnm_rlx = new phenom_relax(param, elec->nk, elec->nb_dm, sdmk->dm_eq);
+		if (alg.phenom_recomb) phnm_recomb = new phenom_recomb(param, elec->nk, elec->nb_dm, elec->nv_dm);
 
 		// observables
 		ob = new ob_1dmk<Tl, Te>(latt, param, elec, eph->bStart, eph->bEnd);
@@ -271,6 +274,11 @@ public:
 
 		if (alg.phenom_relax){
 			phnm_rlx->evolve_driver(t, sdmk->dm, sdmk->dm_eq, sdmk->ddmdt_term);
+			sdmk->update_ddmdt(sdmk->ddmdt_term);
+		}
+
+		if(alg.phenom_recomb){
+			phnm_recomb->evolve(sdmk->dm, sdmk->f_eq, sdmk->ddmdt_term);
 			sdmk->update_ddmdt(sdmk->ddmdt_term);
 		}
 

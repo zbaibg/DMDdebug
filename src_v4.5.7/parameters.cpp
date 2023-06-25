@@ -140,12 +140,18 @@ void parameters::read_param(int argc, char** argv){
 	alg.sparseP = get(param_map, "alg_sparseP", 0);
 	alg.thr_sparseP = get(param_map, "alg_thr_sparseP", 1e-40);
 
-	if (ionode) printf("\nphenomenological relaxation parameters:\n");
+	if (ionode) printf("\nPhenomenological relaxation parameters:\n");
 	alg.phenom_relax = get(param_map, "alg_phenom_relax", 0);
 	if (alg.phenom_relax){
 		tau_phenom = get(param_map, "tau_phenom", 1e15, ps);
 		bStart_tau = get(param_map, "bStart_tau", 0); // relative to bStart_dm
 		bEnd_tau = get(param_map, "bEnd_tau", 0);
+	}
+
+	if (ionode) printf("\nPhenomenological recombination parameters:\n");
+	alg.phenom_recomb = get(param_map, "alg_phenom_recomb", 0);
+	if (alg.phenom_recomb){
+		tau_phenom_recomb = get(param_map, "tau_phenom_recomb", 1e15, ps);
 	}
 
 	if (ionode) printf("\nSmearing parameters:\n");

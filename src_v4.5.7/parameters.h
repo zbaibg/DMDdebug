@@ -27,6 +27,8 @@ public:
 	double tau_phenom;
 	int bStart_tau, bEnd_tau; // if phenom_tau true
 
+	double tau_phenom_recomb;
+
 	double Bx, By, Bz, scale_Ez; vector3<> B;
 	double Bxpert, Bypert, Bzpert; vector3<> Bpert; // to generate an initial spin inbalance
 	bool gfac_normal_dist; bool gfac_k_resolved;

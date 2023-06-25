@@ -95,6 +95,11 @@ DMD parses input commands from a simple text file with one command per line, fir
 		
 		alg\_phenom\_relax & 1 or 0 (default) & If 1, phenomenon relaxation $\dot{\rho} = -(\rho - \rho_\text{eq}) / \tau_\text{phenom}$ will be turned on. If 0, it will be turned off.\\
 		\midrule
+
+		alg\_phenom\_recomb & bool (default 0) & If 1, phenomenonlogical recombination to represent spontaneous emission will be turned on.\\
+		
+		tau\_phenom\_recomb & float (default $10^{15}$ ps) & Phenomenonlogical recombination time in pico seconds.\\
+		\midrule
 		
 		Bxpert, Bypert, Bzpert & a number, e.g. 0.0 (default) & Magnetic field perturbation, one of the mothods that perturbs a system to generate spin unbalance, in the unit of Tesla. x, y and z are cartesian coordinates consistent to input cell parameters.\\
 		\midrule
