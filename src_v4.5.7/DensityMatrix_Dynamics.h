@@ -278,7 +278,7 @@ public:
 		}
 
 		if(alg.phenom_recomb){
-			phnm_recomb->evolve(sdmk->dm, sdmk->f_eq, sdmk->ddmdt_term);
+			phnm_recomb->evolve(sdmk->dm, elec->f_dm, sdmk->ddmdt_term);
 			sdmk->update_ddmdt(sdmk->ddmdt_term);
 		}
 
