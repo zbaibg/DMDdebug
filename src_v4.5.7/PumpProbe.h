@@ -26,8 +26,10 @@ public:
 			return normalize(complex(1, 0)*vector3<>(1, 0, 0));
 		else if (s == "Ey")
 			return normalize(complex(1, 0)*vector3<>(0, 1, 0));
-		else
+		else{
 			error_message("laserPoltype must be LC, RC, Ex or Ey");
+			return vector3<complex>(0, 0, 0);
+		}
 	}
 
 	inline void print(const vector3<complex>& v, const char* format = "%lg "){
