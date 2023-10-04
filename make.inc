@@ -1,6 +1,9 @@
-GSL_DIR=/cm/shared/apps/gsl/2.6
-IFLAGS=-I$(GSL_DIR)/include -I$(GSL_DIR)/include/gsl/gsl_odeiv2.h -I$(MKLROOT)/include
-CC=mpiicpc -std=c++11 -O2 -g -traceback -mkl=sequential $(IFLAGS)
+GSL_DIR= /software/groups/ping_group/shared/libs/gsl-2.7.1/build
+MKLROOT= /software/groups/ping_group/shared/libs/mkl-2023.2.0/mkl/2023.2.0
+IFLAGS=-I$(GSL_DIR)/include -I$(MKLROOT)/include
+CC=mpicxx -std=c++11 -O2 -g
 GSL_LIBS=-L$(GSL_DIR)/lib -lgsl -lgslcblas
 LAPACK_LIBS=-L$(MKLROOT)/lib/intel64 -lmkl_intel_lp64 -lmkl_sequential -lmkl_core -lpthread -lm -ldl
 LDLIBS=$(GSL_LIBS) $(LAPACK_LIBS)
+LDFLAGS = -Wl,-rpath,$(GSL_DIR)/lib,-rpath,$(MKLROOT)/lib/intel64
+
