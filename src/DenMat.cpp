@@ -315,7 +315,7 @@ void singdenmat_k::read_dm_restart(){
 			oneminusdm[ik][i*nb + i] = c1 - dm[ik][i*nb + i];
 	}
 }
-void singdenmat_k::write_dm_tofile(int currentStep, double t, double t0, double tend, double **e){
+void singdenmat_k::write_dm_tofile(int currentStep, int occup_write_interval, double t, double t0, double tend, double **e){
 	MPI_Barrier(MPI_COMM_WORLD);
 	if (!ionode) return;
 	FILE *fil = fopen("denmat.out", "a"); // will be too large after long time
@@ -337,7 +337,7 @@ void singdenmat_k::write_dm_tofile(int currentStep, double t, double t0, double 
 		std::string paddedStep = std::to_string(currentStep);
 		paddedStep = std::string(width - paddedStep.length(), '0') + paddedStep;
 		std::string occupFilename = "occupations-" + paddedStep + ".out";
-		FILE *filoccupt0 = fopen("occupFilename, "w");
+		FILE *filoccupt0 = fopen("occupFilename", "w");
 		fprintf(filoccupt0, "# nk = %d nb = %d nstep = %d t = %11.6f tstep = %11.6f tend = %11.6f \n", nk_glob, nb, currentStep, t, dt, tend);
 		for (int ik = 0; ik < nk_glob; ik++)
 		{

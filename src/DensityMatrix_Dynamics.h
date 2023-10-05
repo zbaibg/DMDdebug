@@ -329,7 +329,7 @@ public:
 
 	void report(int it, bool diff = true, bool prtprobe = true, bool prtdos = false, string lable = ""){
 		if (it % ob->freq_measure != 0) return;
-		if (it > 0) sdmk->write_dm_tofile(it, sdmk->t, sdmk->t0, sdmk->tend,elec->e_dm);
+		if (it > 0) sdmk->write_dm_tofile(it, occup_write_interval, sdmk->t, sdmk->t0, sdmk->tend,elec->e_dm);
 		bool print_ene = it % ob->freq_measure_ene == 0;
 		if (prtdos) ob->measure("dos", lable, true, true, sdmk->t, sdmk->dm); // for dos, diff == true just means file name has no "initial"
 		ob->measure("fn", lable, diff, print_ene, sdmk->t, sdmk->dm);
