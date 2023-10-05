@@ -330,6 +330,7 @@ void singdenmat_k::write_dm_tofile(int currentStep, double t, double t0, double 
 		fprintf(fil, "%11.6f ", dm[0][b].abs());
 	fprintf(fil, "\n");
     
+	if (occup_write_interval == 0) return;
 	if (currentStep % occup_write_interval == 0)
 	{
 		int width = 5;
