@@ -359,6 +359,7 @@ void parameters::read_param(int argc, char** argv){
 	freq_compute_tau = get(param_map, "freq_compute_tau", freq_measure_ene);
 	de_measure = get(param_map, "de_measure", 5e-4, eV);
 	degauss_measure = get(param_map, "degauss_measure", 2e-3, eV);
+	occup_write_interval = get(param_map, "occup_write_interval", 0);
 
 	//valley positions
 	while (true){

@@ -315,7 +315,7 @@ void singdenmat_k::read_dm_restart(){
 			oneminusdm[ik][i*nb + i] = c1 - dm[ik][i*nb + i];
 	}
 }
-void singdenmat_k::write_dm_tofile(double t, double t0, double tend, double **e){
+void singdenmat_k::write_dm_tofile(int currentStep, double t, double t0, double tend, double **e){
 	MPI_Barrier(MPI_COMM_WORLD);
 	if (!ionode) return;
 	FILE *fil = fopen("denmat.out", "a"); // will be too large after long time
@@ -330,10 +330,14 @@ void singdenmat_k::write_dm_tofile(double t, double t0, double tend, double **e)
 		fprintf(fil, "%11.6f ", dm[0][b].abs());
 	fprintf(fil, "\n");
     
-	if (fabs(t - dt) < 1e-30)
+	if (currentStep % occup_write_interval == 0)
 	{
-		FILE *filoccupt0 = fopen("occupations-tstart.out", "w");
-		fprintf(filoccupt0, "# nk = %d nb = %d t = %11.6f tstep = %11.6f tend = %11.6f \n", nk_glob, nb, t, dt, tend);
+		int width = 5;
+		std::string paddedStep = std::to_string(currentStep);
+		paddedStep = std::string(width - paddedStep.length(), '0') + paddedStep;
+		std::string occupFilename = "occupations-" + paddedStep + ".out";
+		FILE *filoccupt0 = fopen("occupFilename, "w");
+		fprintf(filoccupt0, "# nk = %d nb = %d nstep = %d t = %11.6f tstep = %11.6f tend = %11.6f \n", nk_glob, nb, currentStep, t, dt, tend);
 		for (int ik = 0; ik < nk_glob; ik++)
 		{
 			for (int b = 0; b < nb; b++)
@@ -341,17 +345,7 @@ void singdenmat_k::write_dm_tofile(double t, double t0, double tend, double **e)
 		}	
 		fclose(filoccupt0);
 	}
-	if (fabs(t - tend) < dt)
-	{
-		FILE *filoccuptend = fopen("occupations-tend.out", "w");
-		fprintf(filoccuptend, "# nk = %d nb = %d t = %11.6f tstep = %11.6f tend = %11.6f \n", nk_glob, nb, t, dt, tend);
-		for (int ik = 0; ik < nk_glob; ik++)
-		{
-			for (int b = 0; b < nb; b++)
-				fprintf(filoccuptend, "%11.6f   %11.6f\n", e[ik][b], dm[ik][b*(nb+1)].real());
-		}	
-		fclose(filoccuptend);
-	}
+
 	for (int ik = 0; ik < nk_glob; ik++)//{
 		//for (int i = 0; i < nb*nb; i++)
 			//fprintf(fil, "(%15.7e,%15.7e) ", dm[ik][i].real(), dm[ik][i].imag());

@@ -6,6 +6,7 @@ public:
 	bool restart, compute_tau_only, print_along_kpath, print_tot_band;
 	std::vector<vector3<double>> kpath_start, kpath_end;
 	int freq_measure, freq_measure_ene, freq_compute_tau, freq_update_eimp_model, freq_update_ee_model;
+	int occup_write_interval;
 	double de_measure, degauss_measure;
 	double t0, tend, tstep, tstep_laser;
 	int nk1, nk2, nk3;
