@@ -1,3 +1,4 @@
+#include <iomanip> 
 #include "DenMat.h"
 
 template <typename T> int sgn(T val) {
@@ -330,6 +331,20 @@ void singdenmat_k::write_dm_tofile(int currentStep, int occup_write_interval, do
 		fprintf(fil, "%11.6f ", dm[0][b].abs());
 	fprintf(fil, "\n");
     
+	std::ofstream filoccupt("occupations_t0.out");
+		filoccupt << "# nk = " << nk_glob << " nb = " << nb << " nstep = " << currentStep
+                   << " t = " << std::fixed << std::setprecision(6) << t
+                   << " tstep = " << std::fixed << std::setprecision(6) << dt
+                   << " tend = " << std::fixed << std::setprecision(6) << tend << "\n";
+		for (int ik = 0; ik < nk_glob; ik++)
+		{
+			for (int b = 0; b < nb; b++)
+				filoccupt << std::fixed << std::setprecision(6) 
+				   << std::setw(9) << std::right << e[ik][b]
+				   << std::setw(12) << std::right << dm[ik][b*(nb+1)].real()
+                   << std::endl;
+		}	
+	filoccupt.close();
 	if (occup_write_interval == 0) return;
 	if (currentStep % occup_write_interval == 0)
 	{
@@ -337,14 +352,20 @@ void singdenmat_k::write_dm_tofile(int currentStep, int occup_write_interval, do
 		std::string paddedStep = std::to_string(currentStep);
 		paddedStep = std::string(width - paddedStep.length(), '0') + paddedStep;
 		std::string occupFilename = "occupations-" + paddedStep + ".out";
-		FILE *filoccupt0 = fopen("occupFilename", "w");
-		fprintf(filoccupt0, "# nk = %d nb = %d nstep = %d t = %11.6f tstep = %11.6f tend = %11.6f \n", nk_glob, nb, currentStep, t, dt, tend);
+		std::ofstream filoccupt(occupFilename);
+		filoccupt << "# nk = " << nk_glob << " nb = " << nb << " nstep = " << currentStep
+                   << " t = " << std::fixed << std::setprecision(6) << t
+                   << " tstep = " << std::fixed << std::setprecision(6) << dt
+                   << " tend = " << std::fixed << std::setprecision(6) << tend << "\n";
 		for (int ik = 0; ik < nk_glob; ik++)
 		{
 			for (int b = 0; b < nb; b++)
-				fprintf(filoccupt0, "%11.6f   %11.6f\n", e[ik][b], dm[ik][b*(nb+1)].real());
+				filoccupt << std::fixed << std::setprecision(6) 
+				   << std::setw(9) << std::right << e[ik][b]
+				   << std::setw(12) << std::right << dm[ik][b*(nb+1)].real()
+                   << std::endl;
 		}	
-		fclose(filoccupt0);
+		filoccupt.close();
 	}
 
 	for (int ik = 0; ik < nk_glob; ik++)//{
