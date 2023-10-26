@@ -290,7 +290,13 @@ void parameters::read_param(int argc, char** argv){
 	if (pmp.laserA > 0){
 		string pumpPoltype = getString(param_map, "pumpPoltype", "NONE");
 		pmp.laserPoltype = getString(param_map, "laserPoltype", pumpPoltype);
-		pmp.laserPol = pmp.set_Pol(pmp.laserPoltype);
+		if (pmp.laserPoltype == "ExEy"){
+			double theta = get(param_map, "ExEyPolAngle", 0.0);
+			pmp.laserPol = pmp.set_Pol(theta);
+		}
+		else {
+			pmp.laserPol = pmp.set_Pol(pmp.laserPoltype);
+		}
 		if (ionode) { pmp.print(pmp.laserPol); }
 		while (true){
 			int iPol = int(pmp.probePol.size()) + 1;
@@ -612,8 +618,17 @@ string parameters::getString(std::map<std::string, std::string> map, string key,
 		if (ionode) printf("%s = %s\n", key.c_str(), defaultVal.c_str());
 		return defaultVal;
 	}
-	if (ionode) printf("%s = %s\n", key.c_str(), (iter->second).c_str());
-	return iter->second;
+	std::istringstream iss(iter->second);
+	double realValue;
+	if (iss >> realValue){
+		realValue = std::stod(iter->second);
+		if (ionode) printf("%s = %lg\n", key.c_str(), realValue);
+		return defaultVal;
+	}
+	else{
+		if (ionode) printf("%s = %s\n", key.c_str(), (iter->second).c_str());
+		return iter->second;
+	}
 }
 
 std::string parameters::trim(std::string s){
