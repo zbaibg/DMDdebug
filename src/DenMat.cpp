@@ -330,8 +330,9 @@ void singdenmat_k::write_dm_tofile(int currentStep, int occup_write_interval, do
 	for (int b = 0; b < nb * nb; b++)
 		fprintf(fil, "%11.6f ", dm[0][b].abs());
 	fprintf(fil, "\n");
-    
-	std::ofstream filoccupt("occupations_t0.out");
+    printf("Current step: %d\n", currentStep);
+	if (currentStep == 1) {
+		std::ofstream filoccupt("occupations_t0.out");
 		filoccupt << "# nk = " << nk_glob << " nb = " << nb << " nstep = " << currentStep
                    << " t = " << std::fixed << std::setprecision(6) << t
                    << " tstep = " << std::fixed << std::setprecision(6) << dt
@@ -344,9 +345,10 @@ void singdenmat_k::write_dm_tofile(int currentStep, int occup_write_interval, do
 				   << std::setw(12) << std::right << dm[ik][b*(nb+1)].real()
                    << std::endl;
 		}	
-	filoccupt.close();
-	if (occup_write_interval == 0) return;
-	if (currentStep % occup_write_interval == 0)
+		filoccupt.flush();
+		filoccupt.close();
+	}
+	if (occup_write_interval != 0 && currentStep % occup_write_interval == 0) 
 	{
 		int width = 5;
 		std::string paddedStep = std::to_string(currentStep);
@@ -364,7 +366,8 @@ void singdenmat_k::write_dm_tofile(int currentStep, int occup_write_interval, do
 				   << std::setw(9) << std::right << e[ik][b]
 				   << std::setw(12) << std::right << dm[ik][b*(nb+1)].real()
                    << std::endl;
-		}	
+		}
+		filoccupt.flush();	
 		filoccupt.close();
 	}
 
@@ -374,9 +377,8 @@ void singdenmat_k::write_dm_tofile(int currentStep, int occup_write_interval, do
 		fwrite(dm[ik], 2 * sizeof(double), nb*nb, filbin);
 		//fprintf(fil, "\n");
 	//}
-	fflush(fil);
-	fclose(fil); 
-	fclose(filbin); fclose(filtime);
+	fflush(fil); fflush(filbin); fflush(filtime);
+	fclose(fil); fclose(filbin); fclose(filtime);
 }
 void singdenmat_k::write_dm(){
 	MPI_Barrier(MPI_COMM_WORLD);
