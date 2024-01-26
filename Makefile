@@ -18,7 +18,7 @@ $(TARGET): $(OBJS)
 	$(CC) $(CPPFLAGS) $(IFLAGS) $(LDFLAGS) $(OBJS) -o $@ $(LOADLIBES) $(LDLIBS)
 
 $(OBJS) : $(SRC_DIRS)/%.o: $(SRC_DIRS)/%.cpp
-	$(CC) $(CPPFLAGS) -c -o $@ $<
+	$(CC) $(CPPFLAGS) $(IFLAGS) -c -o $@ $<
 
 .PHONY: clean
 clean:
