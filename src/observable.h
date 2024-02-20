@@ -117,7 +117,7 @@ void ob_1dmk<Tl, Te>::measure(string what, string label, bool diff, bool print_e
 	MPI_Barrier(MPI_COMM_WORLD);
 	if (ionode && nb > nv)
 		measure_brange(what, diff, print_ene, t, dm, ddmdt, dt, nv, nb, "_elec" + label, gauss_elec, gauss_dot_elec);
-	MPI_Barrier(MPI_COMM_WORLD);
+ 	MPI_Barrier(MPI_COMM_WORLD);
 	if (ionode && nv > 0)
 		measure_brange(what, diff, print_ene, t, dm, ddmdt, dt, 0, nv, "_hole" + label, gauss_hole, gauss_dot_hole);
 	MPI_Barrier(MPI_COMM_WORLD);
@@ -362,7 +362,7 @@ void ob_1dmk<Tl, Te>::measure_brange(string what, bool diff, bool print_ene, dou
 		tot *= prefac; tot_amp *= prefac; tot_tplusdt *= prefac;
 		tot_d *= prefac; tot_od *= prefac;
 		for (int i = 0; i < bEnd - bStart; i++)
-			tot_band[i - bStart] *= prefac;
+			tot_band[i] *= prefac;
 		for (int iv = 0; iv < this->latt->vpos.size(); iv++){
 			tot_valley[iv] *= prefac;
 			for (int i = 0; i < bEnd - bStart; i++)
