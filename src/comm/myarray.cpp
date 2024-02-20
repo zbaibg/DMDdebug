@@ -1,7 +1,7 @@
 #include <myarray.h>
 #include <stdio.h>
 #include <float.h>
-
+//y(1d vector)=a(scalar)*x(1d vector)+b(scalar)*y(1d vector)+(scalar)
 void axbyc(double *y, double *x, size_t n, double a, double b, double c){
 	if (b == 0) zeros(y, n);
 	else if (b != 1) for (size_t i = 0; i < n; i++) { y[i] *= b; }
@@ -9,9 +9,11 @@ void axbyc(double *y, double *x, size_t n, double a, double b, double c){
 	else if (a == 1) for (size_t i = 0; i < n; i++) { y[i] += x[i] + c; }
 	else for (size_t i = 0; i < n; i++) { y[i] += a * x[i] + c; }
 }
+//y(1d vector)=a(scalar)*x(1d vector)+b(scalar)*y(1d vector)+(scalar)
 void axbyc(double *y, double *x, int n, double a, double b, double c){
 	axbyc(y, x, (size_t)n, a, b, c);
 }
+//y(2d matrix)=a(scalar)*x(2d matrix)+b(scalar)*y(2d matrix)+(scalar)
 void axbyc(double **y, double **x, int n1, int n2, double a, double b, double c){
 	if (b == 0)
 		zeros(y, n1, n2);

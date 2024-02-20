@@ -20,7 +20,8 @@ public:
 	std::vector<vector3<double>> kpath_start, kpath_end;
 	int nkpath;
 	std::vector<int> ik_kpath;
-	double **e, **f, **e_dm, **f_dm, **e_morek, **f_morek, **e_dm_morek, **f_dm_morek; // ocuupation number
+	double **e, **f, **e_dm, **f_dm;//energy for all dft bands, occupation number for all dft bands; energy of density matrix range,  occupation number of density matrix range
+	double **e_morek, **f_morek, **e_dm_morek, **f_dm_morek; // ocuupation number
 	double emin, emax, evmax, ecmin, emid, scissor;
 	vector3<> B; double scale_Ez;
 	bool gfac_normal_dist, gfac_k_resolved;
