@@ -351,7 +351,8 @@ void parameters::read_param(int argc, char** argv){
 		if (ionode) printf("time period of laser = %f\n",  2*M_PI/pumpE);
 		if(tstep_laser > 5*tstep_laser_default) 
 		{
-			error_message("ERROR: tstep_laser is too large", "read_param");
+			if(pmp.laserAlg !="lindblad")// If lindblad light, cancle the error message, to make time step could be any larger value. Modified by Zihao
+			{error_message("ERROR: tstep_laser is too large", "read_param");}
 		}
 		else if((tstep_laser > tstep_laser_default) && ionode) printf("\nWARNING: tstep_laser is large! Consider decreasing it.\n");
 	}
