@@ -210,7 +210,9 @@ public:
 		// evolution
 		MPI_Barrier(MPI_COMM_WORLD);
 		double ti = sdmk->t;
-		for (int it = 1; sdmk->t < sdmk->tend; it += 1, ode.ncalls = 0){
+		int it_init=1+int(ti/dt_current());//Modify initial value of it for consistant step number in restart calculation. (Added by Zihao)
+		// This is only correct if dt_current() is the same during the all run. If not this may generate unexpected init value of it.(Added by Zihao)
+		for (int it = it_init; sdmk->t < sdmk->tend; it += 1, ode.ncalls = 0){
 			if ((it-1) % ob->freq_compute_tau == 0){ compute(sdmk->t); report_tau(it); ode.ncalls = 0; } // notice that you need to call subroutine "compute" before "report_tau"
 			ti += dt_current();
 			if (pmp.active()){
@@ -240,7 +242,7 @@ public:
 		return std::min(ode.hstart, std::min(sdmk->dt / 10, sdmk->dt_laser / 10));
 	}
 	double dt_current(){
-		return pmp.active() && elight->during_laser(sdmk->t) ? elight->dt : sdmk->dt;
+		return pmp.active() && elight->during_laser(sdmk->t) ? elight->dt : sdmk->dt;//elight->dt is tstep_laser of parameters; sdmk->dt is tstep of parameters. Commented by Zihao
 	}
 
 	void compute(double t, bool active_coh = true){
