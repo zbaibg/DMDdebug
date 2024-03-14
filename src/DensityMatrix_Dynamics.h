@@ -210,7 +210,7 @@ public:
 		// evolution
 		MPI_Barrier(MPI_COMM_WORLD);
 		double ti = sdmk->t;
-		int it_init=1+int(ti/dt_current());//Modify initial value of it for consistant step number in restart calculation. (Added by Zihao)
+		int it_init=1+round(ti/dt_current());//Modify initial value of it for consistant step number in restart calculation. (Added by Zihao)
 		// This is only correct if dt_current() is the same during the all run. If not this may generate unexpected init value of it.(Added by Zihao)
 		for (int it = it_init; sdmk->t < sdmk->tend; it += 1, ode.ncalls = 0){
 			if ((it-1) % ob->freq_compute_tau == 0){ compute(sdmk->t); report_tau(it); ode.ncalls = 0; } // notice that you need to call subroutine "compute" before "report_tau"
