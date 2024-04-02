@@ -123,17 +123,6 @@ void singdenmat_k::set_dm_eq(double temperature, double **e, int nv){
 	for (int i = 0; i < nb; i++)
 		dm_eq[ik][i*nb + i] = f_eq[ik][i];
 }
-void singdenmat_k::zero_ddmdt_for_states_outside_dm(){
-	for (int ik = 0; ik < nk_glob; ik++)
-		{
-			for (int ib = 0; ib < nb*nb; ib++){
-				if(elec->e_dm[ik][ib]>elec->etop_dm || elec->e_dm[ik][ib]<elec->ebot_dm)
-				{
-					ddmdt[ik][ib] = 0;
-				}
-			}
-		}
-}
 void singdenmat_k::set_dm_eq(bool isHole, double temperature, double mu0, double **e, int bStart, int bEnd){
 	double nfree_bvk = 0.;
 	for (int ik = 0; ik < nk_glob; ik++)

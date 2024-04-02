@@ -8,21 +8,43 @@ void electronlight::evolve_laser(double t, complex** dm, complex** dm1, complex*
 	else if (pmp.laserAlg == "coherent")
 		evolve_laser_coh(t, dm, dm1, ddmdt_laser);
 }
-inline void electronlight::compute_laserPt(double t, complex *Pk, double *ek){
+inline void electronlight::compute_laserPt(double t, complex *Pk, double *ek)
+{
 	for (int i = 0; i < nb_dm; i++)
-	for (int j = 0; j < nb_dm; j++)
-	if (alg.expt_elight)
-		laserPt[i*nb_dm + j] = Pk[i*nb_dm + j] * cis((ek[i] - ek[j])*t);
-	else
-		laserPt[i*nb_dm + j] = Pk[i*nb_dm + j];
+	{
+
+		for (int j = 0; j < nb_dm; j++)
+		{
+			if (ek[i] > elec->etop_dm || ek[i] < elec->ebot_dm || ek[j] > elec->etop_dm || ek[j] < elec->ebot_dm)
+			{
+				laserPt[i * nb_dm + j] = 0;
+				continue;
+			}// if the energy of one state is outside the energy range of the density matrix, the laserPt is zero (Added by Zihao)
+
+			if (alg.expt_elight)
+				laserPt[i * nb_dm + j] = Pk[i * nb_dm + j] * cis((ek[i] - ek[j]) * t);
+			else
+				laserPt[i * nb_dm + j] = Pk[i * nb_dm + j];
+		}
+	}
 }
-inline void electronlight::compute_laserPt_coh(double t, complex *Pk, double *ek){
+inline void electronlight::compute_laserPt_coh(double t, complex *Pk, double *ek)
+{
 	for (int i = 0; i < nb_dm; i++)
-	for (int j = i; j < nb_dm; j++) // only upper triangle part is needed
-	if (alg.picture == "interaction" && i != j)
-		laserPt[i*nb_dm + j] = Pk[i*nb_dm + j] * cis((ek[i] - ek[j] - pmp.laserE)*t) + Pk[j*nb_dm + i].conj() * cis((ek[i] - ek[j] + pmp.laserE)*t);
-	else
-		laserPt[i*nb_dm + j] = Pk[i*nb_dm + j] * cis(-pmp.laserE*t) + Pk[j*nb_dm + i].conj() * cis(pmp.laserE*t);
+	{
+		for (int j = i; j < nb_dm; j++)
+		{ // only upper triangle part is needed
+			if (ek[i] > elec->etop_dm || ek[i] < elec->ebot_dm || ek[j] > elec->etop_dm || ek[j] < elec->ebot_dm)
+			{
+				laserPt[i * nb_dm + j] = 0;
+				continue;
+			}// if the energy of one state is outside the energy range of the density matrix, the laserPt is zero (Added by Zihao
+			if (alg.picture == "interaction" && i != j)
+				laserPt[i * nb_dm + j] = Pk[i * nb_dm + j] * cis((ek[i] - ek[j] - pmp.laserE) * t) + Pk[j * nb_dm + i].conj() * cis((ek[i] - ek[j] + pmp.laserE) * t);
+			else
+				laserPt[i * nb_dm + j] = Pk[i * nb_dm + j] * cis(-pmp.laserE * t) + Pk[j * nb_dm + i].conj() * cis(pmp.laserE * t);
+		}
+	}
 }
 void electronlight::evolve_laser_coh(double t, complex** dm, complex** dm1, complex** ddmdt_laser){
 	//double trel = t - pmp.pump_tcenter;

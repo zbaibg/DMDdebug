@@ -93,5 +93,4 @@ public:
 	void init_Hcoh(complex **H_BS, complex **H_Ez, double **e);
 	void compute_Hcoht(double t, complex *H, double *e);
 	void evolve_coh(double t, complex** ddmdt_coh);
-	void zero_ddmdt_for_states_outside_dm();
 };
