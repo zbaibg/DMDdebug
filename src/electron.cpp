@@ -129,6 +129,13 @@ void electron::read_ldbd_size(){
 	if (fgets(s, sizeof s, fp) != NULL){
 		sscanf(s, "%le %d %d %d %d", &nk_full, &nk, &kmesh[0], &kmesh[1], &kmesh[2]); if (ionode) printf("nk_full = %21.14le nk = %d kmesh=(%d,%d,%d)\n", nk_full, nk, kmesh[0], kmesh[1], kmesh[2]);
 	}
+	for (int i = 0; i < 5; i++)
+		fgets(s, sizeof s, fp);
+	if (fgets(s, sizeof s, fp) != NULL){
+		double dtmp1, dtmp2;
+		sscanf(s, "%le %le %le %le", &dtmp1, &dtmp2, &ebot_dm, &etop_dm); if (ionode) printf("ebot_dm = %14.7le eV etop_dm = %14.7le eV\n", ebot_dm / eV, etop_dm / eV);
+	}
+
 	fclose(fp);
 }
 void electron::read_ldbd_kvec(){

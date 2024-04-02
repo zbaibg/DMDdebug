@@ -14,6 +14,7 @@ public:
 	int ns, nk, nb, nb_wannier, bskipped_wannier, bskipped_dft, nk_morek; // spin, k point, band
 	int nv, nc; // valence and conduction bands
 	int bStart_dm, bEnd_dm, nb_dm, nv_dm, nc_dm; // band range related to density matrix
+	double ebot_dm, etop_dm; // energy range of density matrix (Added by Zihao)
 	int bStart_eph, bEnd_eph, nb_eph, nv_eph, nc_eph, kecmin;
 	std::vector<vector3<>> kvec, kvec_morek;
 	bool print_along_kpath, print_layer_occ, print_layer_spin;

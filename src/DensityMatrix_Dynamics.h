@@ -285,6 +285,7 @@ public:
 		}
 
 		if (alg.semiclassical) zeros_off_diag(sdmk->ddmdt, sdmk->nk_glob, sdmk->nb);
+		sdmk->zero_ddmdt_for_states_outside_dm();
 	}
 
 	void update_scatt_inside(double t){
