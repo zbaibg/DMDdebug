@@ -94,7 +94,29 @@ void singdenmat_k::read_ldbd_dm0(){
 		error_message("ldbd_dm0.bin does not exist");
 	}
 }
-
+/**
+ * @brief Sets the equilibrium density matrix based on the Fermi-Dirac distribution.
+ * 
+ * This function computes the Fermi-Dirac distribution for each energy level and sets the diagonal elements
+ * of the equilibrium density matrix `dm_eq` to these values.
+ * 
+ * @param temperature The temperature of the system in Kelvin.
+ * @param e Pointer to the array of energy levels.
+ * @param nv Number of valence bands.
+ * 
+ * The Fermi-Dirac distribution is calculated as:
+ * \f[
+ * f_{eq}(ik, i) = \frac{1}{e^{\frac{e_{ik}[i] - \mu}{kT}} + 1}
+ * \f]
+ * where \f$\mu\f$ is the chemical potential, \f$T\f$ is the temperature, and \f$k\f$ is the Boltzmann constant.
+ * 
+ * The equilibrium density matrix `dm_eq` is set as:
+ * \f[
+ * dm_{eq}[ik][i \times nb + i] = f_{eq}[ik][i]
+ * \f]
+ * for each global k-point and band, where \f$nb\f$ is the number of bands, \f$ik\f$ is the global k-point index,
+ * and \f$i\f$ is the band index.
+ */
 void singdenmat_k::set_dm_eq(double temperature, double **e, int nv){
 	if (nb > nv)
 		set_dm_eq(false, temperature, mue, e, nv, nb);
@@ -123,6 +145,41 @@ void singdenmat_k::set_dm_eq(double temperature, double **e, int nv){
 	for (int i = 0; i < nb; i++)
 		dm_eq[ik][i*nb + i] = f_eq[ik][i];
 }
+/**
+ * @brief Calculates and sets the chemical potential for electrons or holes and updates global variables `mue` or `muh`.
+ * 
+ * This function calculates the free carrier concentration and then finds a new chemical potential based on this concentration,
+ * the temperature, and an initial guess for the chemical potential. It updates the global chemical potential variables `mue` or `muh`.
+ * 
+ * @param isHole Boolean indicating whether the calculation is for holes (true) or electrons (false).
+ * @param temperature The temperature of the system in Kelvin.
+ * @param mu0 Initial guess for the chemical potential.
+ * @param e Pointer to the array of energy levels.
+ * @param bStart Start index for the bands considered.
+ * @param bEnd End index for the bands considered.
+ * 
+ * The free carrier concentration \f$n_{\text{free}}\f$ is calculated as:
+ * \f[
+ * n_{\text{free}} = \sum_{i=bStart}^{bEnd} \left( \text{real}(dm[ik][i \times nb + i]) + (isHole ? -1 : 0) \right)
+ * \f]
+ * Adjustments are made for additional k-points if available:
+ * \f[
+ * n_{\text{free}} \pm= \sum_{i=bStart}^{bEnd} \left( elec->f\_dm\_morek[ik][i] + (isHole ? -1 : 0) \right)
+ * \f]
+ * 
+ * The new chemical potential \f$\mu\f$ is found using:
+ * \f[
+ * \mu = \text{find\_mu}(isHole, \text{eip.carrier\_bvk\_ex}(isHole, n_{\text{free}}), temperature, mu0, e, bStart, bEnd)
+ * \f]
+ * 
+ * The global chemical potential variables are updated as:
+ * \f[
+ * \begin{cases} 
+ * mue = \mu & \text{if not isHole} \\
+ * muh = \mu & \text{if isHole}
+ * \end{cases}
+ * \f]
+ */
 void singdenmat_k::set_dm_eq(bool isHole, double temperature, double mu0, double **e, int bStart, int bEnd){
 	double nfree_bvk = 0.;
 	for (int ik = 0; ik < nk_glob; ik++)
@@ -166,7 +223,7 @@ double singdenmat_k::find_mu(bool isHole, double carrier_bvk, double temperature
 			// the shift of mu should be large when current mu is far from converged one
 			if (step > 0 && sgn(excess) == sgn(excess_old)){
 				double ratio = carrier_bvk_new / carrier_bvk;
-				if (ratio < 1e-9)
+				if (ratio < 1e-9) 
 					result -= sgn(excess) * 10 * temperature;
 				else if (ratio < 1e-4)
 					result -= sgn(excess) * 3 * temperature;
