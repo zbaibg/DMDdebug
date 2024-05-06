@@ -1,0 +1,51 @@
+\documentclass{article}
+\usepackage{ifthen}
+\usepackage{epsfig}
+\usepackage[utf8]{inputenc}
+\usepackage{newunicodechar}
+  \newunicodechar{⁻}{${}^{-}$}% Superscript minus
+  \newunicodechar{²}{${}^{2}$}% Superscript two
+  \newunicodechar{³}{${}^{3}$}% Superscript three
+
+\pagestyle{empty}
+\begin{document}
+\[ f_{eq}(ik, i) = \frac{1}{e^{\frac{e_{ik}[i] - \mu}{kT}} + 1} \]
+\pagebreak
+
+$\mu$
+\pagebreak
+
+$T$
+\pagebreak
+
+$k$
+\pagebreak
+
+\[ dm_{eq}[ik][i \times nb + i] = f_{eq}[ik][i] \]
+\pagebreak
+
+$nb$
+\pagebreak
+
+$ik$
+\pagebreak
+
+$i$
+\pagebreak
+
+$n_{\text{free}}$
+\pagebreak
+
+\[ n_{\text{free}} = \sum_{i=bStart}^{bEnd} \left( \text{real}(dm[ik][i \times nb + i]) + (isHole ? -1 : 0) \right) \]
+\pagebreak
+
+\[ n_{\text{free}} \pm= \sum_{i=bStart}^{bEnd} \left( elec->f\_dm\_morek[ik][i] + (isHole ? -1 : 0) \right) \]
+\pagebreak
+
+\[ \mu = \text{find\_mu}(isHole, \text{eip.carrier\_bvk\_ex}(isHole, n_{\text{free}}), temperature, mu0, e, bStart, bEnd) \]
+\pagebreak
+
+\[ \begin{cases} mue = \mu & \text{if not isHole} \\ muh = \mu & \text{if isHole} \end{cases} \]
+\pagebreak
+
+\end{document}
