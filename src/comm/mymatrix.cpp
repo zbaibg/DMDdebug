@@ -131,6 +131,26 @@ complex** trunc_alloccopy_arraymat(complex** arr, int n1, int n2, int bStart, in
 	}
 	return r;
 }
+/**
+ * Copies a submatrix from each matrix in a source array to a destination array.
+ * 
+ * This function extracts a submatrix defined by the range [bStart, bEnd) from each matrix in the source array B,
+ * and copies it into the corresponding matrix in the destination array A. Both A and B are arrays of matrices,
+ * where each matrix is represented as a one-dimensional array of complex numbers, but conceptually treated as two-dimensional.
+ *
+ * Mathematically, for each matrix \( B^{(i)} \) in B and corresponding matrix \( A^{(i)} \) in A:
+ * \[
+ * A^{(i)}[b1 \times nb + b2] = B^{(i)}[(b1 + bStart) \times n2 + (b2 + bStart)]
+ * \]
+ * where \( b1, b2 \) range from 0 to \( nb-1 \), and \( nb = bEnd - bStart \).
+ *
+ * @param A The destination array where the submatrices will be stored. Each matrix in A is conceptually \( nb \times nb \).
+ * @param B The source array containing the original full matrices. Each matrix in B is conceptually \( n2 \times n2 \).
+ * @param n1 The number of matrices in both arrays A and B.
+ * @param n2 The dimension of the matrices in array B (assumed to be square matrices).
+ * @param bStart The starting index for the row and column from which the submatrix will be extracted.
+ * @param bEnd The ending index (exclusive) for the row and column to which the submatrix extraction will extend.
+ */
 void trunc_copy_arraymat(complex** A, complex **B, int n1, int n2, int bStart, int bEnd){
 	// take A[0:n1, bStart:bEnd, bStart:bEnd] from B[0:n1, 0:n2, 0:n2]
 	int nb = bEnd - bStart;
