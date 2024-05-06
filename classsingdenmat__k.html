@@ -16,6 +16,13 @@
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="search/searchdata.js"></script>
 <script type="text/javascript" src="search/search.js"></script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    extensions: ["tex2jax.js"],
+    jax: ["input/TeX","output/HTML-CSS"],
+});
+</script>
+<script type="text/javascript" async="async" src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js"></script>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
 </head>
 <body>
@@ -654,17 +661,17 @@ Public Attributes</h2></td></tr>
   </table>
   </dd>
 </dl>
-<p>The free carrier concentration <img class="formulaInl" alt="$n_{\text{free}}$" src="form_8.png"/> is calculated as: </p><p class="formulaDsp">
-<img class="formulaDsp" alt="\[ n_{\text{free}} = \sum_{i=bStart}^{bEnd} \left( \text{real}(dm[ik][i \times nb + i]) + (isHole ? -1 : 0) \right) \]" src="form_9.png"/>
+<p>The free carrier concentration \(n_{\text{free}}\) is calculated as: </p><p class="formulaDsp">
+\[ n_{\text{free}} = \sum_{i=bStart}^{bEnd} \left( \text{real}(dm[ik][i \times nb + i]) + (isHole ? -1 : 0) \right) \]
 </p>
 <p> Adjustments are made for additional k-points if available: </p><p class="formulaDsp">
-<img class="formulaDsp" alt="\[ n_{\text{free}} \pm= \sum_{i=bStart}^{bEnd} \left( elec-&gt;f\_dm\_morek[ik][i] + (isHole ? -1 : 0) \right) \]" src="form_10.png"/>
+\[ n_{\text{free}} \pm= \sum_{i=bStart}^{bEnd} \left( elec-&gt;f\_dm\_morek[ik][i] + (isHole ? -1 : 0) \right) \]
 </p>
-<p>The new chemical potential <img class="formulaInl" alt="$\mu$" src="form_1.png"/> is found using: </p><p class="formulaDsp">
-<img class="formulaDsp" alt="\[ \mu = \text{find\_mu}(isHole, \text{eip.carrier\_bvk\_ex}(isHole, n_{\text{free}}), temperature, mu0, e, bStart, bEnd) \]" src="form_11.png"/>
+<p>The new chemical potential \(\mu\) is found using: </p><p class="formulaDsp">
+\[ \mu = \text{find\_mu}(isHole, \text{eip.carrier\_bvk\_ex}(isHole, n_{\text{free}}), temperature, mu0, e, bStart, bEnd) \]
 </p>
 <p>The global chemical potential variables are updated as: </p><p class="formulaDsp">
-<img class="formulaDsp" alt="\[ \begin{cases} mue = \mu &amp; \text{if not isHole} \\ muh = \mu &amp; \text{if isHole} \end{cases} \]" src="form_12.png"/>
+\[ \begin{cases} mue = \mu &amp; \text{if not isHole} \\ muh = \mu &amp; \text{if isHole} \end{cases} \]
 </p>
  
 </div>
@@ -712,13 +719,13 @@ Public Attributes</h2></td></tr>
   </dd>
 </dl>
 <p>The Fermi-Dirac distribution is calculated as: </p><p class="formulaDsp">
-<img class="formulaDsp" alt="\[ f_{eq}(ik, i) = \frac{1}{e^{\frac{e_{ik}[i] - \mu}{kT}} + 1} \]" src="form_0.png"/>
+\[ f_{eq}(ik, i) = \frac{1}{e^{\frac{e_{ik}[i] - \mu}{kT}} + 1} \]
 </p>
-<p> where <img class="formulaInl" alt="$\mu$" src="form_1.png"/> is the chemical potential, <img class="formulaInl" alt="$T$" src="form_2.png"/> is the temperature, and <img class="formulaInl" alt="$k$" src="form_3.png"/> is the Boltzmann constant.</p>
+<p> where \(\mu\) is the chemical potential, \(T\) is the temperature, and \(k\) is the Boltzmann constant.</p>
 <p>The equilibrium density matrix <code>dm_eq</code> is set as: </p><p class="formulaDsp">
-<img class="formulaDsp" alt="\[ dm_{eq}[ik][i \times nb + i] = f_{eq}[ik][i] \]" src="form_4.png"/>
+\[ dm_{eq}[ik][i \times nb + i] = f_{eq}[ik][i] \]
 </p>
-<p> for each global k-point and band, where <img class="formulaInl" alt="$nb$" src="form_5.png"/> is the number of bands, <img class="formulaInl" alt="$ik$" src="form_6.png"/> is the global k-point index, and <img class="formulaInl" alt="$i$" src="form_7.png"/> is the band index. </p>
+<p> for each global k-point and band, where \(nb\) is the number of bands, \(ik\) is the global k-point index, and \(i\) is the band index. </p>
 
 </div>
 </div>
